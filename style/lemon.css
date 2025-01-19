@@ -1,0 +1,14 @@
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    /* width: 200px; */
+    width: min-content;
+    min-height: max-content;
+    background-color: transparent;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 2px;
+    border-color: black;
+    border-style: solid;
+}

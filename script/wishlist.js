@@ -4,15 +4,8 @@ function renderPokemonCards(pokemonList) {
     pokemonList.forEach(pokemon => {
         const card = document.createElement('pokemon-card');
         card.data = pokemon;
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove from Wishlist';
-        removeButton.addEventListener('click', () => {
-            removeFromWishlist(pokemon);
-            container.removeChild(card);
-        });
-
-        card.appendChild(removeButton);
+        card.classList.add('card');
+        // 
         container.appendChild(card);
     });
 }
@@ -52,5 +45,7 @@ function removeFromWishlist(pokemonToRemove) {
     wishlist = wishlist.filter(pokemon => pokemon.name !== pokemonToRemove.name);
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
 }
+
+
 
 document.addEventListener('DOMContentLoaded', loadWishlist);

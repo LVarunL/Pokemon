@@ -2,31 +2,43 @@ class Header extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <div class="header">
-                <h1>Pokimon</h1>
+                <img src="images/header.svg" alt="PokeAPI logo">
+                <nav class="navbar">
+                    <a href="index.html">Home</a>
+                    <a href="wishlist.html">Wishlist</a>
+                </nav>  
             </div>
-            <nav class="navbar">
-                <a href="index.html">Home</a>
-                <a href="wishlist.html">Wishlist</a></li>
-            </nav>
-            <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
-            <input type="number" id="min-height-filter" placeholder="Min height...">
-            <input type="number" id="max-height-filter" placeholder="Max height...">
-            <input type="number" id="min-weight-filter" placeholder="Min weight...">
-            <input type="number" id="max-weight-filter" placeholder="Max weight...">
-            <input type="number" id="min-experience-filter" placeholder="Min base experience...">
-            <input type="number" id="max-experience-filter" placeholder="Max base experience...">
-            <select id="type-filter">
-                <option value="">Filter by type...</option>
-            </select>
-            <button id="clear-filters">Clear Filters</button>
-            <select id="sort-by">
-                <option value="">Sort by...</option>
-                <option value="name">Name</option>
-                <option value="height">Height</option>
-                <option value="weight">Weight</option>
-                <option value="base_experience">Base Experience</option>
-            </select>
-            <button id="toggle-sort-order">Toggle Sort Order</button>
+            
+            <div class="filters-container">
+    <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
+    <input type="number" id="min-height-filter" placeholder="Min Height">
+    <input type="number" id="max-height-filter" placeholder="Max Height">
+    <input type="number" id="min-weight-filter" placeholder="Min Weight">
+    <input type="number" id="max-weight-filter" placeholder="Max Weight">
+    <input type="number" id="min-experience-filter" placeholder="Min Experience">
+    <input type="number" id="max-experience-filter" placeholder="Max Experience">
+    <select id="type-filter">
+        <option value="" disabled selected>Filter by Type</option>
+        <!-- Add more options here -->
+    </select>
+    <div class="sort-controls">
+        <select id="sort-by">
+            <option value="" disabled selected>Sort by</option>
+            <option value="name">Name</option>
+            <option value="height">Height</option>
+            <option value="weight">Weight</option>
+            <option value="base_experience">Base Experience</option>
+        </select>
+        <label for="toggle-sort-order" class="toggle-label">
+            <input type="checkbox" id="toggle-sort-order">
+            <span>Descending</span>
+        </label>
+    </div>
+    <button id="clear-filters" class="clear-btn">Clear Filters</button>
+</div>
+
+</div>
+
           `
     }
 }
@@ -36,59 +48,63 @@ customElements.define('main-header', Header);
 class PokemonCard extends HTMLElement {
     set data(pokemon) {
         this.innerHTML = `
-            <div class="card">
-                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                <h2>${pokemon.name}</h2>
-                <p>Species: ${pokemon.species.name}</p>
-                <p>Height: ${pokemon.height}</p>
-                <p>Weight: ${pokemon.weight}</p>
-                <p>Base Experience: ${pokemon.base_experience}</p>
-                <p>Forms: ${pokemon.forms.map(form => form.name).join(', ')}</p>
-                <p>Types: ${pokemon.types.map(t => t.type.name).join(', ')}</p>
-                <p>Abilities: ${pokemon.abilities.map(ab => ab.ability.name).join(', ')}</p>
-                <h3>Stats</h3>
-                <p>${pokemon.stats[0].stat.name}:${pokemon.stats[0]['base_stat']}</p>
-                <p>${pokemon.stats[1].stat.name}:${pokemon.stats[1]['base_stat']}</p>
-                <p>${pokemon.stats[2].stat.name}:${pokemon.stats[2]['base_stat']}</p>
-                <p>${pokemon.stats[3].stat.name}:${pokemon.stats[3]['base_stat']}</p>
-                <p>${pokemon.stats[4].stat.name}:${pokemon.stats[4]['base_stat']}</p>
-                <p>${pokemon.stats[5].stat.name}:${pokemon.stats[5]['base_stat']}</p>
-                
-                <audio controls>
-                    <source src="${pokemon.cries.latest}" type="audio/ogg">
-                    Your browser does not support the audio element.
-                </audio>
+            <div class="">
+                <div class="card-upper">
+                    <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                    <h2>${pokemon.name.toUpperCase()}</h2>
+                    <p><strong>Specie:</strong> ${pokemon.species.name}</p>
+                    <p><strong>Types:</strong> ${pokemon.types.map(t => `<span class="type-badge">${t.type.name}</span>`).join('')}</p>
+
+                    <button class="audio-btn" onclick="document.getElementById('audio-${pokemon.id}').play()">🔊</button>
+                </div>
+                <div class="card-lower">
+                    <div class="card-details">
+                        <p><strong>Height:</strong> ${pokemon.height}</p>
+                        <p><strong>Weight:</strong> ${pokemon.weight}</p>
+                        <p><strong>Base Experience:</strong> ${pokemon.base_experience}</p>
+                        <p><strong>Forms:</strong> ${pokemon.forms.map(form => form.name).join(', ')}</p>
+                        <p><strong>Abilities:</strong> ${pokemon.abilities.map(ab => ab.ability.name).join(', ')}</p>
+                    </div>
+                    <div class="card-stats">
+                        ${pokemon.stats.map(stat => `<p><strong>${stat.stat.name}:</strong> ${stat.base_stat}</p>`).join('')}
+                    </div>
+                </div>
+                <audio id="audio-${pokemon.id}" src="${pokemon.cries.latest}" type="audio/ogg"></audio>
             </div>
         `;
 
-        if (!window.location.pathname.includes('wishlist.html')) {
-            const wishlistButton = document.createElement('button');
-            wishlistButton.className = 'wishlist-btn';
-            wishlistButton.textContent = 'Add to Wishlist';
+        const wishlistButton = document.createElement('span');
+        wishlistButton.className = 'wishlist-icon';
+        wishlistButton.innerHTML = '&#9825;';  // Hollow heart
 
-            let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            const isInWishlist = wishlist.some(p => p.name === pokemon.name);
-            if (isInWishlist) {
-                wishlistButton.textContent = 'In Wishlist';
-                wishlistButton.disabled = true;
-            }
-
-            wishlistButton.addEventListener('click', () => {
-                if (!isInWishlist) {
-                    wishlist.push(pokemon);
-                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                    wishlistButton.textContent = 'In Wishlist';
-                    wishlistButton.disabled = true;
-                    alert(`${pokemon.name} added to wishlist!`);
-                } else {
-                    alert(`${pokemon.name} is already in the wishlist!`);
-                }
-            });
-
-            this.querySelector('.card').appendChild(wishlistButton);
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const isInWishlist = wishlist.some(p => p.name === pokemon.name);
+        if (isInWishlist) {
+            wishlistButton.innerHTML = '&#9829;';  // Filled heart
+            wishlistButton.classList.add('added');
         }
+
+        wishlistButton.addEventListener('click', () => {
+            if (isInWishlist) {
+                wishlist = wishlist.filter(p => p.name !== pokemon.name);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                wishlistButton.innerHTML = '&#9825;';
+                wishlistButton.classList.remove('added');
+                alert(`${pokemon.name} removed from wishlist!`);
+                if (window.location.pathname.includes('wishlist.html')) {
+                    this.remove();
+                }
+            } else {
+                wishlist.push(pokemon);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                wishlistButton.innerHTML = '&#9829;';
+                wishlistButton.classList.add('added');
+                alert(`${pokemon.name} added to wishlist!`);
+            }
+        });
+
+        this.querySelector('.card-upper').appendChild(wishlistButton);
     }
 }
 
 customElements.define('pokemon-card', PokemonCard);
-

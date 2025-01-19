@@ -133,3 +133,5 @@ function sortPokemon(pokemonList, sortBy, sortOrder) {
         return sortOrder === 'desc' ? -comparison : comparison;
     });
 }
+
+

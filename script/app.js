@@ -10,6 +10,7 @@ async function renderPokemonCards(pokemonList) {
     container.innerHTML = ''; 
     pokemonList.forEach(pokemon => {
         const card = document.createElement('pokemon-card');
+        card.classList.add("card");
         card.data = pokemon;
         container.appendChild(card);
     });
@@ -17,7 +18,7 @@ async function renderPokemonCards(pokemonList) {
 
 async function loadPokemon() {
     const pokemonList = [];
-    for (let id = 1; id <= 12; id++) {
+    for (let id = 1; id <= 100; id++) {
         const pokemon = await fetchPokemon(id);
         pokemonList.push(pokemon);
     }

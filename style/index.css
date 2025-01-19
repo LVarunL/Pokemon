@@ -1,50 +1,305 @@
+:root {
+    --gray1: #9DA3A7;
+    --brown1: #7C747C;
+    --maroon1: #3D2D34;
+    --brownmarron1: #50444A;
+    --red1: #FF3F40;
+    --light1: #CACACC;
+    --dark1: #221B21;
+    --redmaroon1: #79272A;
+    --darkbrown1: #2B2528
+}
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg");
+    background-attachment: fixed;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+    color: var(--primary-color);
+}
+
+p {
+    line-height: 1.6;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: sticky;
+    top:0;
+    color: var(--light1);
+    background-color: whitesmoke;
+    background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg");
+    z-index: 100; 
+}
+
+.header img {
+    max-height: 100px;
+    width: auto;
+}
+
+.navbar a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: var(--light1);
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar a:hover {
+    color: var(--gray1);
+}
+
+
 .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start;
+    gap: 30px;
+    justify-content: center;
     align-items: stretch;
+    padding: 30px;;
+    
 }
+
 
 .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
+    border: 2px solid var(--dark1);
+    border-radius: 50px;
+    padding: 30px;
+    background-color: rgb(240, 241, 247, 0.6);
+    /* width: 300px; */
+    transition: transform 0.2s ease-in-out;
+    /* flex-grow: 1; */
+    width: 300px;
+}
+
+
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+.card-upper {
     text-align: center;
-    /* width: 200px; */
-    width: min-content;
-    min-height: max-content;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--dark1);
+    
 }
 
-.card img {
-    max-width: 100%;
+.card-upper img {
+    /* max-width: 120px; */
+    width: 150px;
     border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
 }
 
-.filters {
+.card-upper h2 {
+    font-size: 24px;
+    color: var(--dark1);
+    margin: 5px;
+}
+
+.card-upper p {
+    font-size: 14px;
+    color: var(--darkbrown1);
+    margin: 5px 0;
+}
+
+
+.card-lower {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
+    justify-content: space-between;
+    padding: 10px 0;
 }
 
-.filters input,
-.filters select {
-    padding: 10px;
+.card-details,
+.card-stats {
+    width: 48%;
+}
+
+.card-stats p {
+    font-size: 14px;
+    color: var(--darkbrown1);
+}
+
+.type-badge {
+    display: inline-block;
+    margin: 5px 5px 0 0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: var(--brownmarron1);
+    color: var(--light1);
+    font-size: 12px;
+}
+
+.audio-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--gray1);
+    color: var(--light1);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.audio-btn:hover {
+    background-color: var(--maroon1);
+}
+
+.card-lower {
+    text-align: left;
+}
+
+.card-lower p {
+    font-size: 14px;
+    color: var(--darkbrown1);
+    margin: 5px 0;
+}
+
+.card-lower h3 {
+    font-size: 18px;
+    color: var(--maroon1);
+    margin-top: 10px;
+}
+
+.wishlist-heart {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: var(--red1);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.wishlist-heart.filled {
+    color: var(--redmaroon1);
+}
+
+
+
+
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    margin: 30px;
+    background-color: rgba(6, 0, 0, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    /* align-items: center; */
 }
 
 #search-bar {
-    display: block;
-    width: 100%;
+    min-width: 100%;
+    flex: 1 1 400px;
+    font-size: 1.5rem;
     padding: 10px;
-    margin: 20px 0;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid var(--dark1);
+    border-radius: 20px;
+    background-color: var(--light1);
+    color: var(--dark1);
 }
 
+#search-bar::placeholder {
+    color: var(--dark1);
+    opacity: 0.5;
+}
+
+
+
+.filters-container input,
+.filters-container select {
+    padding: 8px;
+    font-size: 14px;
+    border: 2px solid var(--dark1);
+    border-radius: 15px;
+    background-color: var(--light1);
+    color: var(--dark1);
+    flex: 0 1 150px;
+}
+
+.filters-container input::placeholder,
+.filters-container select option {
+    color: var(--dark1);
+}
+
+
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: var(--light1);
+    cursor: pointer;
+}
+
+.clear-btn {
+    padding: 8px;
+    background-color: var(--dark1);
+    color: var(--light1);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    flex: 0 1 150px;
+    text-align: center;
+}
+
+.clear-btn:hover {
+    background-color: var(--maroon1);
+}
+
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #search-bar {
+        flex: 1 1 100%;
+    }
+
+    .filters-container input,
+    .filters-container select,
+    .clear-btn {
+        flex: 1 1 100%;
+    }
+}
+
+
+  
