@@ -66,7 +66,6 @@ class PokemonCard extends HTMLElement {
             wishlistButton.className = 'wishlist-btn';
             wishlistButton.textContent = 'Add to Wishlist';
 
-            // Check if the Pokémon is already in the wishlist
             let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
             const isInWishlist = wishlist.some(p => p.name === pokemon.name);
             if (isInWishlist) {

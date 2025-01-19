@@ -44,7 +44,6 @@ function loadWishlist() {
 
     const uniqueTypes = getUniqueTypes(wishlist);
     populateTypeDropdown(uniqueTypes);
-    // Initialize filters with the loaded wishlist
     initializeFilters(wishlist, renderPokemonCards);
 }
 

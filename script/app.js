@@ -51,6 +51,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const uniqueTypes = getUniqueTypes(pokemonList);
     populateTypeDropdown(uniqueTypes);
     
-    initializeFilters(pokemonList, renderPokemonCards); // Initialize filters for this page
+    initializeFilters(pokemonList, renderPokemonCards); 
 });
 
