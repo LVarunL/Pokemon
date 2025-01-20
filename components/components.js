@@ -77,7 +77,11 @@ class PokemonCard extends HTMLElement {
         wishlistButton.className = 'wishlist-icon';
         wishlistButton.innerHTML = '&#9825;'; 
 
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let wishlist = [];
+        wishlistIDs.forEach(id=>{
+            wishlist.push(fetchPokemon(id)); //it's async.....
+        })
         const isInWishlist = wishlist.some(p => p.name === pokemon.name);
         if (isInWishlist) {
             wishlistButton.innerHTML = '&#9829;'; 
@@ -87,7 +91,8 @@ class PokemonCard extends HTMLElement {
         wishlistButton.addEventListener('click', () => {
             if (isInWishlist) {
                 wishlist = wishlist.filter(p => p.name !== pokemon.name);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                const wishlisIDs = wishlist.map(p => p.id);
+                localStorage.setItem('wishlist', JSON.stringify(wishlisIDs));
                 wishlistButton.innerHTML = '&#9825;';
                 wishlistButton.classList.remove('added');
                 alert(`${pokemon.name} removed from wishlist!`);
@@ -96,7 +101,8 @@ class PokemonCard extends HTMLElement {
                 }
             } else {
                 wishlist.push(pokemon);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                const wishlisIDs = wishlist.map(p => p.id);
+                localStorage.setItem('wishlist', JSON.stringify(wishlisIDs));
                 wishlistButton.innerHTML = '&#9829;';
                 wishlistButton.classList.add('added');
                 alert(`${pokemon.name} added to wishlist!`);

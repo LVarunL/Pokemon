@@ -1,14 +1,17 @@
 async function fetchPokemon(id) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
     const data = await response.json();
-    console.log(data);
     return data;
 }
 
 function renderPokemonCards(pokemonList) {
     const container = document.querySelector('.container');
     container.innerHTML = '';
+    console.log(pokemonList);
+    console.log(pokemonList.length);
     pokemonList.forEach(pokemon => {
+        console.log("hi");
+        console.log(pokemon);
         const card = document.createElement('pokemon-card');
         card.data = pokemon;
         card.classList.add('card');
@@ -37,22 +40,32 @@ function populateTypeDropdown(types) {
     });
 }
 
-function loadWishlist() {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    renderPokemonCards(wishlist);
+async function loadWishlist() {
+    const wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
+    let wishlist = [];
+    
+    for(let i=0; i<wishlistIDs.length; i++){
+        wishlist.push(await fetchPokemon(wishlistIDs[i]));
+    }
+    console.log(wishlist); //can we instead use promise.all()
+    return wishlist;
+    
+}
 
+function removeFromWishlist(pokemonToRemove) {
+    let wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
+    wishlistIDs = wishlistIDs.filter(id => id !== pokemonToRemove.id);
+    localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
+}
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const wishlist = await loadWishlist();
+    
+    renderPokemonCards(wishlist);
 
     const uniqueTypes = getUniqueTypes(wishlist);
     populateTypeDropdown(uniqueTypes);
     initializeFilters(wishlist, renderPokemonCards);
-}
-
-function removeFromWishlist(pokemonToRemove) {
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    wishlist = wishlist.filter(pokemon => pokemon.name !== pokemonToRemove.name);
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-}
-
-
-
-document.addEventListener('DOMContentLoaded', loadWishlist);
+});
