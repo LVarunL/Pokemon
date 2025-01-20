@@ -10,34 +10,34 @@ class Header extends HTMLElement {
             </div>
             
             <div class="filters-container">
-    <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
-    <input type="number" id="min-height-filter" placeholder="Min Height">
-    <input type="number" id="max-height-filter" placeholder="Max Height">
-    <input type="number" id="min-weight-filter" placeholder="Min Weight">
-    <input type="number" id="max-weight-filter" placeholder="Max Weight">
-    <input type="number" id="min-experience-filter" placeholder="Min Experience">
-    <input type="number" id="max-experience-filter" placeholder="Max Experience">
-    <select id="type-filter">
-        <option value="" disabled selected>Filter by Type</option>
-        <!-- Add more options here -->
-    </select>
-    <div class="sort-controls">
-        <select id="sort-by">
-            <option value="" disabled selected>Sort by</option>
-            <option value="name">Name</option>
-            <option value="height">Height</option>
-            <option value="weight">Weight</option>
-            <option value="base_experience">Base Experience</option>
-        </select>
-        <label for="toggle-sort-order" class="toggle-label">
-            <input type="checkbox" id="toggle-sort-order">
-            <span>Descending</span>
-        </label>
-    </div>
-    <button id="clear-filters" class="clear-btn">Clear Filters</button>
-</div>
+                <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
+                <input type="number" id="min-height-filter" placeholder="Min Height">
+                <input type="number" id="max-height-filter" placeholder="Max Height">
+                <input type="number" id="min-weight-filter" placeholder="Min Weight">
+                <input type="number" id="max-weight-filter" placeholder="Max Weight">
+                <input type="number" id="min-experience-filter" placeholder="Min Experience">
+                <input type="number" id="max-experience-filter" placeholder="Max Experience">
+                <select id="type-filter">
+                    <option value=""disabled selected>Filter by Type</option>
+                    <!-- Add more options here -->
+                </select>
+                <div class="sort-controls">
+                    <select id="sort-by">
+                        <option value=""  selected>Default</option>
+                        <option value="name">Name</option>
+                        <option value="height">Height</option>
+                        <option value="weight">Weight</option>
+                        <option value="base_experience">Base Experience</option>
+                    </select>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="toggle-sort-order">
+                        <span>Descending</span>
+                    </label>
+                </div>
+                <button id="clear-filters" class="clear-btn">Clear Filters</button>
+            </div>
 
-</div>
+            </div>
 
           `
     }
@@ -75,12 +75,12 @@ class PokemonCard extends HTMLElement {
 
         const wishlistButton = document.createElement('span');
         wishlistButton.className = 'wishlist-icon';
-        wishlistButton.innerHTML = '&#9825;';  // Hollow heart
+        wishlistButton.innerHTML = '&#9825;'; 
 
         let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         const isInWishlist = wishlist.some(p => p.name === pokemon.name);
         if (isInWishlist) {
-            wishlistButton.innerHTML = '&#9829;';  // Filled heart
+            wishlistButton.innerHTML = '&#9829;'; 
             wishlistButton.classList.add('added');
         }
 
@@ -92,7 +92,7 @@ class PokemonCard extends HTMLElement {
                 wishlistButton.classList.remove('added');
                 alert(`${pokemon.name} removed from wishlist!`);
                 if (window.location.pathname.includes('wishlist.html')) {
-                    this.remove();
+                    location.reload(); //find alternative if possible
                 }
             } else {
                 wishlist.push(pokemon);

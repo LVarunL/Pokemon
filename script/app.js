@@ -5,7 +5,7 @@ async function fetchPokemon(id) {
     return data;
 }
 
-async function renderPokemonCards(pokemonList) {
+function renderPokemonCards(pokemonList) {
     const container = document.querySelector('.container');
     container.innerHTML = ''; 
     pokemonList.forEach(pokemon => {
@@ -16,9 +16,9 @@ async function renderPokemonCards(pokemonList) {
     });
 }
 
-async function loadPokemon() {
+async function loadPokemon() { //check if these 100 would be added in parallel or one by one...if one by one  make them parallel
     const pokemonList = [];
-    for (let id = 1; id <= 100; id++) {
+    for (let id = 1; id <= 100; id++) { //fetching 100 pokemons
         const pokemon = await fetchPokemon(id);
         pokemonList.push(pokemon);
     }
