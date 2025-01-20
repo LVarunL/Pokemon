@@ -23,7 +23,7 @@ class Header extends HTMLElement {
                 </select>
                 <div class="sort-controls">
                     <select id="sort-by">
-                        <option value=""  selected>Default</option>
+                        <option value=""  selected>Sort By...</option>
                         <option value="name">Name</option>
                         <option value="height">Height</option>
                         <option value="weight">Weight</option>
@@ -50,7 +50,10 @@ class PokemonCard extends HTMLElement {
         this.innerHTML = `
             <div class="">
                 <div class="card-upper">
+                    <div class="pokiimage">
                     <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                    </div>
+
                     <h2>${pokemon.name.toUpperCase()}</h2>
                     <p><strong>Specie:</strong> ${pokemon.species.name}</p>
                     <p><strong>Types:</strong> ${pokemon.types.map(t => `<span class="type-badge">${t.type.name}</span>`).join('')}</p>
@@ -105,6 +108,30 @@ class PokemonCard extends HTMLElement {
                 location.reload(); //find alternative
             }
         });
+
+        const pokiImage = this.getElementsByClassName('pokiimage');
+
+        for (let i = 0; i < pokiImage.length; i++) {
+            pokiImage[i].addEventListener('mouseover', function() {
+                // console.log("hi pokiimage");
+                // console.log(pokiImage[i]);
+                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.other.showdown.front_default}" alt="${pokemon.name}">`
+            });
+
+            pokiImage[i].addEventListener('mouseout', function() {
+
+                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">`
+            });
+        }
+
+        // console.log(pokiImage);
+        // const pokiImage = this.getElementsByClassName('pokiimage');
+        // // console.log(pokiImage)
+        // pokiImage.addEventListener('mouseover', () => {
+
+        //     pokiImage.innerHTML = `<img src="${pokemon.sprites.other.showdown?pokemon.sprites.other.showdown.front_default:pokemon.sprites.front_default}" alt="${pokemon.name}">`
+        // });
+        // pokiImage.innerHTML = `<img src="${pokemon.sprites.other.showdown?pokemon.sprites.other.showdown.front_default:pokemon.sprites.front_default}" alt="${pokemon.name}">
 
         // this.querySelector('.card-upper').appendChild(wishlistButton);
     }

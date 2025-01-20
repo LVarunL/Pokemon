@@ -42,14 +42,10 @@ function populateTypeDropdown(types) {
 
 async function loadWishlist() {
     const wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
-    let wishlist = [];
-    
-    for(let i=0; i<wishlistIDs.length; i++){
-        wishlist.push(await fetchPokemon(wishlistIDs[i]));
-    }
-    console.log(wishlist); //can we instead use promise.all()
+    const wishlistPromises = wishlistIDs.map(id => fetchPokemon(id));
+    const wishlist = await Promise.all(wishlistPromises);
+    console.log(wishlist);
     return wishlist;
-    
 }
 
 function removeFromWishlist(pokemonToRemove) {

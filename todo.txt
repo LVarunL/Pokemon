@@ -1,10 +1,9 @@
 1. understand how is the reusing of html working
-2. on hover, make it a gif
 3. do stuff with stat
 4. allow to select more than one type
 5. understand how toggle sorting order button is working
-7. promise.all() and promise.allsettled()
 
 
 set of questions:
 1. upon removal of card from wishlist, i am reloading the page, is there any betetr way?
+2. any way to display the loaded while waiting for others....pagination and lazy loading is the soluition??or is it called virtualization idk

@@ -1,7 +1,7 @@
 async function fetchPokemon(id) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
     const data = await response.json();
-   
+    // console.log(data);
     return data;
 }
 
@@ -16,13 +16,19 @@ function renderPokemonCards(pokemonList) {
     });
 }
 
-async function loadPokemon() { //check if these 100 would be added in parallel or one by one...if one by one  make them parallel
-    const pokemonList = [];
-    for (let id = 1; id <= 100; id++) { //fetching 100 pokemons
-        const pokemon = await fetchPokemon(id);
-        pokemonList.push(pokemon);
+async function loadPokemon() { 
+    const pokemonPromises = [];
+    for (let id = 1; id <= 1000; id++) { 
+        pokemonPromises.push(fetchPokemon(id));
     }
-    return pokemonList;
+    const pokemonListPromises = await Promise.allSettled(pokemonPromises);
+    let pokimonList = [];
+    pokemonListPromises.forEach((pokimonPromise)=>{
+        if(pokimonPromise.status === 'fulfilled'){
+            pokimonList.push(pokimonPromise.value);
+        }
+    })
+    return pokimonList;
 }
 
 function getUniqueTypes(pokemonList) {
