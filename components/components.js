@@ -54,7 +54,7 @@ class PokemonCard extends HTMLElement {
                     <h2>${pokemon.name.toUpperCase()}</h2>
                     <p><strong>Specie:</strong> ${pokemon.species.name}</p>
                     <p><strong>Types:</strong> ${pokemon.types.map(t => `<span class="type-badge">${t.type.name}</span>`).join('')}</p>
-
+                    <span class="wishlist-icon">&#9825</span>
                     <button class="audio-btn" onclick="document.getElementById('audio-${pokemon.id}').play()">🔊</button>
                 </div>
                 <div class="card-lower">
@@ -73,16 +73,10 @@ class PokemonCard extends HTMLElement {
             </div>
         `;
 
-        const wishlistButton = document.createElement('span');
-        wishlistButton.className = 'wishlist-icon';
-        wishlistButton.innerHTML = '&#9825;'; 
-
+    
+        const wishlistButton = this.querySelector('.wishlist-icon');
         let wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
-        let wishlist = [];
-        wishlistIDs.forEach(id=>{
-            wishlist.push(fetchPokemon(id)); //it's async.....
-        })
-        const isInWishlist = wishlist.some(p => p.name === pokemon.name);
+        const isInWishlist = wishlistIDs.some(id => id === pokemon.id);
         if (isInWishlist) {
             wishlistButton.innerHTML = '&#9829;'; 
             wishlistButton.classList.add('added');
@@ -90,26 +84,29 @@ class PokemonCard extends HTMLElement {
 
         wishlistButton.addEventListener('click', () => {
             if (isInWishlist) {
-                wishlist = wishlist.filter(p => p.name !== pokemon.name);
-                const wishlisIDs = wishlist.map(p => p.id);
-                localStorage.setItem('wishlist', JSON.stringify(wishlisIDs));
+                wishlistIDs = wishlistIDs.filter(id => id !== pokemon.id);
+                // const wishlisIDs = wishlist.map(p => p.id);
+                localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
                 wishlistButton.innerHTML = '&#9825;';
                 wishlistButton.classList.remove('added');
                 alert(`${pokemon.name} removed from wishlist!`);
                 if (window.location.pathname.includes('wishlist.html')) {
                     location.reload(); //find alternative if possible
                 }
+                else{
+                    location.reload();
+                }
             } else {
-                wishlist.push(pokemon);
-                const wishlisIDs = wishlist.map(p => p.id);
-                localStorage.setItem('wishlist', JSON.stringify(wishlisIDs));
+                wishlistIDs.push(pokemon.id);
+                localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
                 wishlistButton.innerHTML = '&#9829;';
                 wishlistButton.classList.add('added');
                 alert(`${pokemon.name} added to wishlist!`);
+                location.reload(); //find alternative
             }
         });
 
-        this.querySelector('.card-upper').appendChild(wishlistButton);
+        // this.querySelector('.card-upper').appendChild(wishlistButton);
     }
 }
 

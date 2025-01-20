@@ -3,7 +3,7 @@
 3. do stuff with stat
 4. allow to select more than one type
 5. understand how toggle sorting order button is working
-6. only store IDs in local storage and then refetch the data from api rather than storing entire data in localStorage
+7. promise.all() and promise.allsettled()
 
 
 set of questions:
