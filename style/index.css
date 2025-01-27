@@ -17,12 +17,20 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 0;
-    background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg");
+    /* background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg"); */
+    background-image: url("/Users/varun/learningJS/Pokemon/images/back.avif");
     background-attachment: fixed;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Roboto', sans-serif;
     color: var(--primary-color);
 }
@@ -37,11 +45,11 @@ p {
     justify-content: space-between;
     padding: 10px 20px;
     position: sticky;
-    top:0;
+    top: 0;
     color: var(--light1);
     background-color: whitesmoke;
     background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg");
-    z-index: 100; 
+    z-index: 100;
 }
 
 .header img {
@@ -68,8 +76,8 @@ p {
     gap: 30px;
     justify-content: center;
     align-items: stretch;
-    padding: 30px;;
-    
+    padding: 30px;
+
 }
 
 
@@ -77,11 +85,17 @@ p {
     border: 2px solid var(--dark1);
     border-radius: 50px;
     padding: 30px;
-    background-color: rgb(240, 241, 247, 0.6);
+    /* background-color: rgb(240, 241, 247, 0.6); */
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    /* backdrop-filter: blur(20px); */
+    /* -webkit-backdrop-filter: blur(20px); */
+
     /* width: 300px; */
     transition: transform 0.2s ease-in-out;
     /* flex-grow: 1; */
     width: 300px;
+    max-height: 500px;
 }
 
 
@@ -97,7 +111,7 @@ p {
     position: relative;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--dark1);
-    
+
 }
 
 .card-upper img {
@@ -303,4 +317,22 @@ p {
 }
 
 
+#pagination {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 5px;
+}
+#pagination button {
+    
+    cursor: pointer;
+  }
+  #pagination button.active {
+    background-color: #007BFF;
+    color: white;
+  }
+  #pagination button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
   

@@ -96,9 +96,9 @@ class PokemonCard extends HTMLElement {
                 if (window.location.pathname.includes('wishlist.html')) {
                     location.reload(); //find alternative if possible
                 }
-                else{
-                    location.reload();
-                }
+                // else{
+                //     location.reload();
+                // }
             } else {
                 wishlistIDs.push(pokemon.id);
                 localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
@@ -138,3 +138,4 @@ class PokemonCard extends HTMLElement {
 }
 
 customElements.define('pokemon-card', PokemonCard);
+
