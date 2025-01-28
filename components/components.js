@@ -115,7 +115,7 @@ class PokemonCard extends HTMLElement {
             pokiImage[i].addEventListener('mouseover', function() {
                 // console.log("hi pokiimage");
                 // console.log(pokiImage[i]);
-                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.other.showdown.front_default}" alt="${pokemon.name}">`
+                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.other.showdown.front_default?pokemon.sprites.other.showdown.front_default:pokemon.sprites.front_default}" alt="${pokemon.name}">`
             });
 
             pokiImage[i].addEventListener('mouseout', function() {

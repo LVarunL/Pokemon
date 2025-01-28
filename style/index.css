@@ -18,10 +18,10 @@ body {
     margin: 0;
     padding: 0;
     /* background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg"); */
-    background-image: url("/Users/varun/learningJS/Pokemon/images/back.avif");
+    background-image: url("/Users/varun/learningJS/Pokemon/images/Back2.jpg");
     background-attachment: fixed;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    /* backdrop-filter: blur(5px); */
+    /* -webkit-backdrop-filter: blur(5px); */
 
 }
 
@@ -336,3 +336,11 @@ p {
     opacity: 0.5;
   }
   
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 5rem;
+    color: yellow;
+  }

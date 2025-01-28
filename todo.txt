@@ -1,9 +1,12 @@
-1. understand how is the reusing of html working
+
 3. do stuff with stat
-4. allow to select more than one type
+4. allow to select more than one type in filter
 5. understand how toggle sorting order button is working
-1. loading all at once....pagination tytpes exploration
-2. 
+1. check if there is API to fetch pokimons together..that way we wont need so many api requests, can be fetched by one per page
+2. filter and sorting APIs
+3. infinite scroll pagination
+4. learn scrolling elements provided by html compnents
+5. on refresh can we keep the page?
 
 set of questions:
 1. upon removal of card from wishlist, i am reloading the page, is there any betetr way?
