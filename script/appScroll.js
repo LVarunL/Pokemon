@@ -2,7 +2,25 @@ let pokimonList = [];
 let [from, to] = [1, 50]
 const pokeURL = "https://pokeapi.co/api/v2/"
 let typesDisplayed = [];
-
+const totalPokemons = 1025;
+    let pokimonsPerPage = 16; 
+    const totalPages = Math.ceil(totalPokemons / pokimonsPerPage);  
+let currentPage = {
+    value: 1,
+    async set(newValue) { //is very very unpure
+        if (newValue > 0 && newValue <= totalPages) {
+            this.value = newValue;
+        }
+        else if (newValue <= 0) {
+            this.value = 1;
+        }
+        else if (newValue > totalPages) {
+            this.value = totalPages;
+        }
+        showLoader();
+        renderPage();
+    }
+}
 
 async function fetchPokemon(id) { //is pure
     const response = await fetch(pokeURL + "pokemon/" + id);
@@ -96,20 +114,20 @@ function renderPokemonCards(pokemonsToRender) { //is pure
 //     return pokimonList;
 // }
 
-// async function loadPokemonsInRange() { //uses from and to global variables
-//     const pokemonPromises = [];
-//     for (let id = from; id <= to; id++) {
-//         pokemonPromises.push(fetchPokemon(id));
-//     }
-//     const pokemonListPromises = await Promise.allSettled(pokemonPromises);
-//     let rangePokemonList = [];
-//     pokemonListPromises.forEach((pokimonPromise) => {
-//         if (pokimonPromise.status === 'fulfilled') {
-//             rangePokemonList.push(pokimonPromise.value);
-//         }
-//     })
-//     return rangePokemonList;
-// }
+async function loadPokemonsInRange() { //uses from and to global variables
+    const pokemonPromises = [];
+    for (let id = from; id <= to; id++) {
+        pokemonPromises.push(fetchPokemon(id));
+    }
+    const pokemonListPromises = await Promise.allSettled(pokemonPromises);
+    let rangePokemonList = [];
+    pokemonListPromises.forEach((pokimonPromise) => {
+        if (pokimonPromise.status === 'fulfilled') {
+            rangePokemonList.push(pokimonPromise.value);
+        }
+    })
+    return rangePokemonList;
+}
 
 
 
@@ -149,9 +167,12 @@ async function handleCheckboxSelect(type) { //also handle unchecking of checkbox
         const pokemonsToDisplay = await Promise.all(pokemonPromises);
         // console.log(pokemonsToDisplay[0]);
         renderPokemonCards(pokemonsToDisplay[0]); //check why
-        // if(typesDisplayed.length===0){
-        //     renderPokemonCards(pokimonList);
-        // }
+        if(typesDisplayed.length===0){
+            currentPage.value = 1;
+            from = 1;
+            to = pokimonsPerPage;
+            renderPage();
+        }
 
     }
     // selectedTypes.forEach(async (type)=>{
@@ -191,13 +212,13 @@ function showCheckboxes() {
     }
 }
 
-// async function renderPage(currentPage, totalPages, pokimonsPerPage, pokimonList) {
+async function renderPage() {
 
-//     [from, to] = getIDsForCurrentPage(currentPage.value, pokimonsPerPage);
-//     newPokemonList = await loadPokemonsInRange(pokimonList);
-//     renderPokemonCards(newPokemonList);
-//     // renderPaginationWithNav(totalPages, currentPage);
-// }
+    [from, to] = getIDsForCurrentPage(currentPage.value, pokimonsPerPage);
+    newPokemonList = await loadPokemonsInRange(pokimonList);
+    renderPokemonCards(newPokemonList);
+    // renderPaginationWithNav(totalPages, currentPage);
+}
 
 // function renderPaginationWithNav(totalPages, currentPage) { //is pure
 //     const paginationContainer = document.getElementById('pagination');
@@ -266,12 +287,12 @@ function showCheckboxes() {
 //     paginationContainer.appendChild(nextButton);
 // };
 
-// function getIDsForCurrentPage(currentPage, pokimonsPerPage) { //is pure
-//     const from = (currentPage - 1) * pokimonsPerPage + 1;
-//     const to = currentPage * pokimonsPerPage;
-//     return [from, to];
+function getIDsForCurrentPage(currentPage, pokimonsPerPage) { //is pure
+    const from = (currentPage - 1) * pokimonsPerPage + 1;
+    const to = currentPage * pokimonsPerPage;
+    return [from, to];
 
-// }
+}
 
 
 
@@ -288,31 +309,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const totalPokemons = 1025;
-    let pokimonsPerPage = 16; //later on give user option to select number of pokimons per page 
+    //later on give user option to select number of pokimons per page 
     from = 1;
     to = pokimonsPerPage;
-    let pokimonList = [];
-    const totalPages = Math.ceil(totalPokemons / pokimonsPerPage);  // Calculate total number of pages
-    let currentPage = {
-        value: 1,
-        async set(newValue) { //is very very unpure
-            if (newValue > 0 && newValue <= totalPages) {
-                this.value = newValue;
-            }
-            else if (newValue <= 0) {
-                this.value = 1;
-            }
-            else if (newValue > totalPages) {
-                this.value = totalPages;
-            }
-            showLoader();
-            // renderPage(this, totalPages, pokimonsPerPage, pokimonList);
-        }
-    }
+    // Calculate total number of pages
+    
 
-    // pokemonList = await loadPokemonsInRange();
-    // renderPokemonCards(pokemonList);
+    pokemonList = await loadPokemonsInRange();
+    renderPokemonCards(pokemonList);
 
     const container = document.querySelector('body');
     container.onscroll = () => {
