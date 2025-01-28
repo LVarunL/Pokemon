@@ -1,26 +1,30 @@
 let pokimonList = [];
-let [from, to] = [1, 50]
-const pokeURL = "https://pokeapi.co/api/v2/"
+let [from, to] = [1, 50];
 let typesDisplayed = [];
-const totalPokemons = 1025;
-    let pokimonsPerPage = 16; 
-    const totalPages = Math.ceil(totalPokemons / pokimonsPerPage);  
+let pokemonsPerPage = 16;
+
+let isFetching = false;
 let currentPage = {
+    
     value: 1,
-    async set(newValue) { //is very very unpure
-        if (newValue > 0 && newValue <= totalPages) {
+     set(newValue) { //is very very unpure
+        if (newValue > 0 ) {
             this.value = newValue;
         }
         else if (newValue <= 0) {
             this.value = 1;
         }
-        else if (newValue > totalPages) {
-            this.value = totalPages;
-        }
         showLoader();
-        renderPage();
-    }
+        renderPage().then(()=>isFetching=false);
+    },
 }
+let nextPageURL;
+let prevPageURL;
+const pokeURL = "https://pokeapi.co/api/v2/";
+
+const baseURL = `https://pokeapi.co/api/v2/pokemon/?limit=${pokemonsPerPage}&offset=0`;
+
+
 
 async function fetchPokemon(id) { //is pure
     const response = await fetch(pokeURL + "pokemon/" + id);
@@ -34,18 +38,26 @@ async function fetchPokemonFromURL(url) { //is pure
     return data;
 }
 
-async function fetchPokemonsOfType(type) { //is pure
+async function fetchPokemonsOfType(type) { //is pure(can be further divided)
     const response = await fetch(pokeURL + 'type/' + type);
     const data = await response.json();
     const pokemons = data.pokemon;
-    let pokemonList = [];
     let pokimonPromises = [];
     pokemons.forEach((pokemon) => {
         // console.log(pokemon.pokemon.url);
         pokimonPromises.push(fetchPokemonFromURL(pokemon.pokemon.url));
     })
-    pokemonList = await Promise.all(pokimonPromises); //change it to allsettled
-    return pokemonList;
+    const pokemonOfTypeList = await Promise.all(pokimonPromises); //change it to allsettled
+    return pokemonOfTypeList;
+}
+
+async function fetchPokemonsFromURLList(urlList){
+    let pokimonPromises = [];
+    urlList.forEach((url) => {
+        pokimonPromises.push(fetchPokemonFromURL(url));
+    });
+    const pokemonsFromURL = await Promise.all(pokimonPromises); //change it to allsettled
+    return pokemonsFromURL;
 }
 
 async function getAllTypes() { //is pure
@@ -54,9 +66,13 @@ async function getAllTypes() { //is pure
     const data = (await response.json()).results;
 
     const types = data.map(dataItem => dataItem.name);
-    // console.log(types);
     return types;
 }
+
+async function getNextPagePokimons(){
+
+} 
+
 
 function populateTypeDropdown(types) { // is pure
     const typeFilter = document.getElementById('checkboxes');
@@ -83,12 +99,12 @@ function showLoader() { //is pure
         container.insertAdjacentElement('afterend', loader);
     }
     else {
-        loaderExisting.remove()
+        loaderExisting.remove();
     }
 }
 
 function renderPokemonCards(pokemonsToRender) { //is pure
-    if(!pokemonsToRender) return;
+    if (!pokemonsToRender) return;
     const container = document.querySelector('.container');
     pokemonsToRender.forEach(pokemon => {
         const card = document.createElement('pokemon-card');
@@ -99,43 +115,11 @@ function renderPokemonCards(pokemonsToRender) { //is pure
     showLoader();//check if this is the correct place to put loader, also check if the function is still pure
 }
 
-// async function loadPokemon() {
-//     const pokemonPromises = [];
-//     for (let id = 1; id <= 1025; id++) { //1025 
-//         pokemonPromises.push(fetchPokemon(id));
-//     }
-//     const pokemonListPromises = await Promise.allSettled(pokemonPromises);
-//     let pokimonList = [];
-//     pokemonListPromises.forEach((pokimonPromise) => {
-//         if (pokimonPromise.status === 'fulfilled') {
-//             pokimonList.push(pokimonPromise.value);
-//         }
-//     })
-//     return pokimonList;
-// }
-
-async function loadPokemonsInRange() { //uses from and to global variables
-    const pokemonPromises = [];
-    for (let id = from; id <= to; id++) {
-        pokemonPromises.push(fetchPokemon(id));
-    }
-    const pokemonListPromises = await Promise.allSettled(pokemonPromises);
-    let rangePokemonList = [];
-    pokemonListPromises.forEach((pokimonPromise) => {
-        if (pokimonPromise.status === 'fulfilled') {
-            rangePokemonList.push(pokimonPromise.value);
-        }
-    })
-    return rangePokemonList;
-}
 
 
 
-async function handleCheckboxSelect(type) { //also handle unchecking of checkbox
-    // const checkedBoxes = document.querySelectorAll('input[name="typeOption"]:checked');
-    // const selectedTypes = [...checkedBoxes].map(checkedBox=>{
-    //     return checkedBox.dataset.value;
-    // })
+
+async function handleCheckboxSelect(type) { 
     console.log(type);
     if (!typesDisplayed.includes(type)) {
         console.log("adding " + type);
@@ -147,7 +131,6 @@ async function handleCheckboxSelect(type) { //also handle unchecking of checkbox
             renderPokemonCards(newPokimons);
         }
         else {
-            // filteredPokemonList = [...filteredPokemonList, newPokimons];
             renderPokemonCards(newPokimons);
         }
         typesDisplayed.push(type);
@@ -160,40 +143,22 @@ async function handleCheckboxSelect(type) { //also handle unchecking of checkbox
         const container = document.querySelector(".container");
         container.innerHTML = ``;
         pokemonPromises = [];
-        
-        typesDisplayed.forEach((typeDisplayed)=>{
+
+        typesDisplayed.forEach((typeDisplayed) => {
             pokemonPromises.push(fetchPokemonsOfType(typeDisplayed));
         })
         const pokemonsToDisplay = await Promise.all(pokemonPromises);
         // console.log(pokemonsToDisplay[0]);
         renderPokemonCards(pokemonsToDisplay[0]); //check why
-        if(typesDisplayed.length===0){
+        if (typesDisplayed.length === 0) {
             currentPage.value = 1;
             from = 1;
-            to = pokimonsPerPage;
+            to = pokemonsPerPage;
             renderPage();
         }
 
     }
-    // selectedTypes.forEach(async (type)=>{
-    //     if(!typesDisplayed.includes(type)){
-    //         console.log(type);
-    //         const newPokimons = await fetchPokemonsOfType(type);
-    //         console.log(newPokimons);
-    //         if(typesDisplayed.length === 0){
-    //             pokimonList = newPokimons;
-    //             const container = document.querySelector(".container");
-    //             container.innerHTML = ``;
-    //             renderPokemonCards(pokimonList);
-    //         }
-    //         else{
-    //             pokimonList = [...pokimonList,newPokimons];
-
-    //             renderPokemonCards(pokimonList);
-    //         }
-    //         typesDisplayed.push(type);
-    //     }
-    // })
+    
 }
 
 
@@ -214,146 +179,65 @@ function showCheckboxes() {
 
 async function renderPage() {
 
-    [from, to] = getIDsForCurrentPage(currentPage.value, pokimonsPerPage);
-    newPokemonList = await loadPokemonsInRange(pokimonList);
-    renderPokemonCards(newPokemonList);
-    // renderPaginationWithNav(totalPages, currentPage);
+    const pokemonPromises = await fetch(nextPageURL);
+    const pokemonsData = await pokemonPromises.json();
+    nextPageURL = pokemonsData.next;
+    console.log(nextPageURL);
+    prevPageURL = pokemonsData.prev;
+    const pokemonsURLs = pokemonsData.results.map((pokimonData)=>{
+        // console.log(pokimonData.url);
+        return pokimonData.url;
+
+    });
+    const pokemons = await fetchPokemonsFromURLList(pokemonsURLs);
+    renderPokemonCards(pokemons);
 }
-
-// function renderPaginationWithNav(totalPages, currentPage) { //is pure
-//     const paginationContainer = document.getElementById('pagination');
-//     paginationContainer.innerHTML = '';
-
-//     const prevButton = document.createElement('button');
-//     prevButton.textContent = 'Previous';
-//     prevButton.disabled = currentPage.value === 1;
-//     prevButton.onclick = () => {
-//         if (currentPage.value > 1) {
-//             currentPage.set(currentPage.value - 1);
-//         }
-//     };
-//     paginationContainer.appendChild(prevButton);
-//     maxPagesToShow = 5;
-//     let startPage = Math.max(1, currentPage.value - Math.floor(maxPagesToShow / 2));
-//     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-
-//     if (endPage - startPage < maxPagesToShow - 1) {
-//         startPage = Math.max(1, endPage - maxPagesToShow + 1);
-//     }
-
-//     if(startPage>1){
-//         const pageButton = document.createElement('button');
-//         pageButton.textContent = '...';
-//         pageButton.onclick = () => {
-//             //render here
-//             currentPage.set(startPage-1);
-//         };
-//         paginationContainer.appendChild(pageButton);
-//     }
-
-//     for (let i = startPage; i <= endPage; i++) {
-//         const pageButton = document.createElement('button');
-//         pageButton.textContent = i;
-
-//         pageButton.classList.toggle('active', i === currentPage.value); 
-//         pageButton.onclick = () => {
-//             //render here
-//             currentPage.set(i);
-//         };
-//         paginationContainer.appendChild(pageButton);
-//     }
-
-//     if(endPage<totalPages){
-//         const pageButton = document.createElement('button');
-//         pageButton.textContent = '...';
-//         pageButton.onclick = () => {
-//             //render here
-//             currentPage.set(endPage+1);
-//         };
-//         paginationContainer.appendChild(pageButton);
-//     }
-
-
-//     const nextButton = document.createElement('button');
-//     nextButton.textContent = 'Next';
-//     nextButton.disabled = currentPage.value === totalPages;
-//     nextButton.onclick = () => {
-//         if (currentPage.value < totalPages) {
-//             //render logic here
-//             currentPage.set(currentPage.value+1);
-
-//         }
-//     };
-//     paginationContainer.appendChild(nextButton);
-// };
-
-function getIDsForCurrentPage(currentPage, pokimonsPerPage) { //is pure
-    const from = (currentPage - 1) * pokimonsPerPage + 1;
-    const to = currentPage * pokimonsPerPage;
-    return [from, to];
-
-}
-
-
 
 document.addEventListener('DOMContentLoaded', async () => {
     const types = await getAllTypes();
     populateTypeDropdown(types);
     const selectBox = document.querySelector(".selectBox");
     selectBox.addEventListener("click", (e) => {
-        // e.stopImmediatePropagation();
-        // e.stopPropagation();
         showCheckboxes();
-    })
-    // populateTypeDropdown(types);
-})
+    });
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
-    //later on give user option to select number of pokimons per page 
     from = 1;
-    to = pokimonsPerPage;
-    // Calculate total number of pages
-    
+    to = pokemonsPerPage;
 
-    pokemonList = await loadPokemonsInRange();
-    renderPokemonCards(pokemonList);
+    const initialPokemonsPromise = await fetch(baseURL);
+    const initialPokemonsData = await initialPokemonsPromise.json();
+    nextPageURL = initialPokemonsData.next;
+    prevPageURL = initialPokemonsData.prev;
+    const initialPokemonsURLs = initialPokemonsData.results.map((pokimonData)=>{
+        
+        return pokimonData.url
+
+    });
+    console.log(initialPokemonsURLs);
+    const initialPokemons = await fetchPokemonsFromURLList(initialPokemonsURLs);
+    console.log(initialPokemons);
+    renderPokemonCards(initialPokemons);
 
     const container = document.querySelector('body');
-    container.onscroll = () => {
-        // if (isLoading) return;
-
+    container.onscroll =  () => {
+        if(isFetching) 
+        {
+            return;
+        }
         if (
             Math.ceil(container.clientHeight
                 + container.scrollTop) >=
             container.scrollHeight
         ) {
-            if (currentPage.value < totalPages) {
-                //render logic here
+           
+                isFetching = true;
                 console.log("adding bro");
-                currentPage.set(currentPage.value + 1);
-
-            }
+                 currentPage.set(currentPage.value + 1);
+                
         }
     };
-    // const uniqueTypes = getUniqueTypes(pokemonList);
-    // populateTypeDropdown(uniqueTypes);
-
-    // initializeFilters(pokemonList, renderPokemonCards);
-
-    // renderPaginationWithNav(totalPages, currentPage);
+    
 });
-
-
-// window.addEventListener('scroll', () => {
-//     const {
-//         scrollTop,
-//         scrollHeight,
-//         clientHeight
-//     } = document.documentElement;
-
-//     if (scrollTop + clientHeight ) {
-//         console.log("hi");
-//     }
-// });
-
 
