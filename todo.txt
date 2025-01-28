@@ -7,6 +7,7 @@
 3. infinite scroll pagination
 4. learn scrolling elements provided by html compnents
 5. on refresh can we keep the page?
+6. total is not 1025...use the next vala API
 
 set of questions:
 1. upon removal of card from wishlist, i am reloading the page, is there any betetr way?

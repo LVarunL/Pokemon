@@ -1,3 +1,49 @@
+// class Header extends HTMLElement {
+//     connectedCallback() {
+//         this.innerHTML = `
+//             <div class="header">
+//                 <img src="images/header.svg" alt="PokeAPI logo">
+//                 <nav class="navbar">
+//                     <a href="index.html">Home</a>
+//                     <a href="wishlist.html">Wishlist</a>
+//                 </nav>  
+//             </div>
+            
+//             <div class="filters-container">
+//                 <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
+//                 <input type="number" id="min-height-filter" placeholder="Min Height">
+//                 <input type="number" id="max-height-filter" placeholder="Max Height">
+//                 <input type="number" id="min-weight-filter" placeholder="Min Weight">
+//                 <input type="number" id="max-weight-filter" placeholder="Max Weight">
+//                 <input type="number" id="min-experience-filter" placeholder="Min Experience">
+//                 <input type="number" id="max-experience-filter" placeholder="Max Experience">
+//                 <select id="type-filter">
+//                     <option value=""disabled selected>Filter by Type</option>
+//                     <!-- Add more options here -->
+//                 </select>
+//                 <div class="sort-controls">
+//                     <select id="sort-by">
+//                         <option value=""  selected>Sort By...</option>
+//                         <option value="name">Name</option>
+//                         <option value="height">Height</option>
+//                         <option value="weight">Weight</option>
+//                         <option value="base_experience">Base Experience</option>
+//                     </select>
+//                     <label class="toggle-label">
+//                         <input type="checkbox" id="toggle-sort-order">
+//                         <span>Descending</span>
+//                     </label>
+//                 </div>
+//                 <button id="clear-filters" class="clear-btn">Clear Filters</button>
+//             </div>
+
+//             </div>
+
+//           `
+//     }
+// }
+
+
 class Header extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -10,37 +56,27 @@ class Header extends HTMLElement {
             </div>
             
             <div class="filters-container">
-                <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
-                <input type="number" id="min-height-filter" placeholder="Min Height">
-                <input type="number" id="max-height-filter" placeholder="Max Height">
-                <input type="number" id="min-weight-filter" placeholder="Min Weight">
-                <input type="number" id="max-weight-filter" placeholder="Max Weight">
-                <input type="number" id="min-experience-filter" placeholder="Min Experience">
-                <input type="number" id="max-experience-filter" placeholder="Max Experience">
-                <select id="type-filter">
-                    <option value=""disabled selected>Filter by Type</option>
-                    <!-- Add more options here -->
-                </select>
-                <div class="sort-controls">
-                    <select id="sort-by">
-                        <option value=""  selected>Sort By...</option>
-                        <option value="name">Name</option>
-                        <option value="height">Height</option>
-                        <option value="weight">Weight</option>
-                        <option value="base_experience">Base Experience</option>
-                    </select>
-                    <label class="toggle-label">
-                        <input type="checkbox" id="toggle-sort-order">
-                        <span>Descending</span>
-                    </label>
-                </div>
-                <button id="clear-filters" class="clear-btn">Clear Filters</button>
+                <form>
+                    <div class="multiselect">
+                        <div class="selectBox"">
+                            Select Types
+                            <div id="checkboxes">
+                            
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+
             </div>
 
             </div>
 
           `
     }
+    
+
+    
 }
 
 customElements.define('main-header', Header);

@@ -21,7 +21,7 @@ body {
     background-image: url("/Users/varun/learningJS/Pokemon/images/Back2.jpg");
     background-attachment: fixed;
     /* backdrop-filter: blur(5px); */
-    /* -webkit-backdrop-filter: blur(5px); */
+    /* -webkit-backwdrop-filter: blur(5px); */
 
 }
 
@@ -216,107 +216,6 @@ p {
 
 
 
-
-
-.filters-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    margin: 30px;
-    background-color: rgba(6, 0, 0, 0.5);
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    /* align-items: center; */
-}
-
-#search-bar {
-    min-width: 100%;
-    flex: 1 1 400px;
-    font-size: 1.5rem;
-    padding: 10px;
-    border: 2px solid var(--dark1);
-    border-radius: 20px;
-    background-color: var(--light1);
-    color: var(--dark1);
-}
-
-#search-bar::placeholder {
-    color: var(--dark1);
-    opacity: 0.5;
-}
-
-
-
-.filters-container input,
-.filters-container select {
-    padding: 8px;
-    font-size: 14px;
-    border: 2px solid var(--dark1);
-    border-radius: 15px;
-    background-color: var(--light1);
-    color: var(--dark1);
-    flex: 0 1 150px;
-}
-
-.filters-container input::placeholder,
-.filters-container select option {
-    color: var(--dark1);
-}
-
-
-
-.sort-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    color: var(--light1);
-    cursor: pointer;
-}
-
-.clear-btn {
-    padding: 8px;
-    background-color: var(--dark1);
-    color: var(--light1);
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
-    flex: 0 1 150px;
-    text-align: center;
-}
-
-.clear-btn:hover {
-    background-color: var(--maroon1);
-}
-
-@media (max-width: 768px) {
-    .filters-container {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    #search-bar {
-        flex: 1 1 100%;
-    }
-
-    .filters-container input,
-    .filters-container select,
-    .clear-btn {
-        flex: 1 1 100%;
-    }
-}
-
-
 #pagination {
     display: flex;
     justify-content: center;
@@ -344,3 +243,60 @@ p {
     font-size: 5rem;
     color: yellow;
   }
+
+
+  /* .multiselect {
+    width: 200px;
+  } */
+  
+  /* .selectBox {
+    position: relative;
+  } */
+  
+  /* .selectBox select {
+    width: 100%;
+    font-weight: bold;
+  } */
+  
+  
+  .selectBox{
+    width: 200px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+    background-color: white;
+    margin-left: 30px;
+    border-radius: 10px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    height:20px;
+    text-align: center;
+  }
+  
+  #checkboxes {
+    
+    display: none;
+    /* border: 1px #dadada solid; */
+    /* color: white; */
+    /* margin-left: 10px; */
+    background-color: rgba(238, 229, 229, 0.701);
+    position: absolute;
+    left:0;
+    top:30px;
+    width: 200px;
+    border-radius: 10px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    font-weight: bold;
+    z-index:10;
+  }
+  
+  #checkboxes label {
+    display: block;
+  }
+  
+  #checkboxes label:hover {
+    background-color: #1e90ff;
+  }
+  
