@@ -17,12 +17,15 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 0;
+    align-content: center;
     /* background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg"); */
     background-image: url("/Users/varun/learningJS/Pokemon/images/Back2.jpg");
     background-attachment: fixed;
     /* backdrop-filter: blur(5px); */
     /* -webkit-backwdrop-filter: blur(5px); */
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1,
@@ -39,6 +42,12 @@ p {
     line-height: 1.6;
 }
 
+
+.main-header{
+    
+    width: 100%;
+    /* height:50px; */
+}
 .header {
     display: flex;
     align-items: center;
@@ -50,6 +59,7 @@ p {
     background-color: whitesmoke;
     background-image: url("/Users/varun/learningJS/Pokemon/images/back2.jpg");
     z-index: 100;
+    
 }
 
 .header img {
@@ -71,12 +81,18 @@ p {
 
 
 .container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    align-items: stretch;
-    padding: 30px;
+    /* display: flex; */
+    /* flex-wrap: wrap; */
+    /* gap:30px; */
+    /* justify-content: center; */
+    overflow-y: auto;
+    /* padding: 30px; */
+    
+    width: 1400px;
+    position: relative;
+    background-color: #CACACC;  
+    /* top:100; */
+    
 
 }
 
@@ -84,18 +100,23 @@ p {
 .card {
     border: 2px solid var(--dark1);
     border-radius: 50px;
-    padding: 30px;
+    /* padding: 30px; */
     /* background-color: rgb(240, 241, 247, 0.6); */
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     /* backdrop-filter: blur(20px); */
     /* -webkit-backdrop-filter: blur(20px); */
-
+    
     /* width: 300px; */
     transition: transform 0.2s ease-in-out;
     /* flex-grow: 1; */
-    width: 300px;
-    max-height: 500px;
+    width:320px;
+    height:500px;
+    /* position:absolute; */
+    /* top:0;
+    left:0; */
+    z-index: 10;
+    
 }
 
 
@@ -140,6 +161,7 @@ p {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
+    margin-left: 10px;
 }
 
 .card-details,
@@ -272,6 +294,7 @@ p {
     position: relative;
     height:20px;
     text-align: center;
+    display: none;
   }
   
   #checkboxes {

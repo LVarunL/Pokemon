@@ -42,9 +42,10 @@
 //           `
 //     }
 // }
-
+// import { renderedCards } from "../script/virtualisedApp";
 
 class Header extends HTMLElement {
+    
     connectedCallback() {
         this.innerHTML = `
             <div class="header">
@@ -82,6 +83,30 @@ class Header extends HTMLElement {
 customElements.define('main-header', Header);
 
 class PokemonCard extends HTMLElement {
+    connectedCallback(){
+        
+        const thisCard = this;
+        
+        function handleScrollForCard() {
+            
+            let bounding = thisCard.getBoundingClientRect();
+            if (bounding.top >= -530 
+                && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + 530) {
+                    
+            } else {
+                const idx = thisCard.getAttribute("data-idx");
+                
+                thisCard.remove();
+            }
+        }
+        
+        
+        document.addEventListener("scroll",()=>{
+            // console.log("kji");
+            handleScrollForCard();
+        });
+        
+    }
     set data(pokemon) {
         this.innerHTML = `
             <div class="">
@@ -111,6 +136,10 @@ class PokemonCard extends HTMLElement {
                 <audio id="audio-${pokemon.id}" src="${pokemon.cries.latest}" type="audio/ogg"></audio>
             </div>
         `;
+
+        
+
+        
 
     
         const wishlistButton = this.querySelector('.wishlist-icon');
