@@ -84,21 +84,35 @@ customElements.define('main-header', Header);
 
 class PokemonCard extends HTMLElement {
     connectedCallback(){
-        
         const thisCard = this;
-        
+
         function handleScrollForCard() {
-            
+            console.log(window.innerHeight,"le");
             let bounding = thisCard.getBoundingClientRect();
-            if (bounding.top >= -530 
-                && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + 530) {
+            if (bounding.top >= -1*(bufferRows+1)*(cardHeight+gap) //document.documentElement.clientHeight<=bounding.top+(cardHeight+gap)*(bufferRows+1) OR bounding.bottom-(bufferRows+1)*cardHeight<=window.innerHeight
+                && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (bufferRows+1)*(cardHeight+gap)) {
                     
             } else {
-                const idx = thisCard.getAttribute("data-idx");
                 
                 thisCard.remove();
             }
+
         }
+        // function handleScrollForCard() {
+        //     let bounding = thisCard.getBoundingClientRect();
+        //     const bufferHeight = (cardHeight + gap) * bufferRows; // Buffer height
+
+        //     // Keep cards within buffer range
+        //     if (
+        //         bounding.top >= -bufferHeight && 
+        //         bounding.bottom <= (window.innerHeight + bufferHeight)
+        //     ) {
+        //         return; // Within buffer, do nothing
+        //     }
+
+        //     // Remove only if outside buffer range
+        //     thisCard.remove();
+        // }
         
         
         document.addEventListener("scroll",()=>{

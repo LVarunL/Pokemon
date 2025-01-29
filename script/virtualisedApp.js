@@ -1,35 +1,51 @@
 let topScroll = 0;
-let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-const itemHeight = 500+30;
-let startingIndex = 8;
-let endingIndex = 8;
+let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+let startingIndex = 16;
+let endingIndex = 16;
 let pokemonList = [];
-// const pokeURL = "https://pokeapi.co/api/v2/";
 let nextURL = "https://pokeapi.co/api/v2/pokemon"
 let isFetching = false;
 
+
+const container = document.querySelector(".container");
+const containerWidth = container.clientWidth;
+const cardHeight = 500;
+const cardWidth = 300;
+const gap = 30;
+const cardsPerRow = Math.floor(containerWidth/(cardWidth+gap));
+const emptyHorizontalSpace = containerWidth - cardsPerRow*cardWidth - (cardsPerRow-1)*gap;
+const leftSpace = emptyHorizontalSpace/2;
+const bufferRows = 2;
+
+
+// const renderedCards = {};
 
 function createCard(idx) {
     const card = document.createElement('pokemon-card');
     card.classList.add("card");
     card.style.position = "absolute";
-    card.style.left = 55+(idx%4)*(330);
-    card.style.top = 0+Math.floor(idx/4)*(530);
-    card.style.backgroundColor = "white";
+    card.style.left = leftSpace+(idx%cardsPerRow)*(cardWidth+gap);
+    card.style.top = Math.floor(idx/cardsPerRow)*(cardHeight+gap);
     card.dataset.idx = idx;
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
-    container.style.height = 0+Math.floor(idx/4)*(530)+530+2000;
+    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+10*(cardHeight+gap);
     container.appendChild(card);
 }
 
 async function renderViewportCards(){
     const oldStartingIndex = startingIndex;
     const oldEndingIndex = endingIndex;
-    startingIndex = 4*Math.floor(topScroll/itemHeight);
-    endingIndex = 4*Math.floor((topScroll + vh) / itemHeight)+3;
-    console.log(startingIndex,endingIndex,oldStartingIndex,oldEndingIndex);
+    startingIndex = cardsPerRow*(Math.floor(topScroll/(cardHeight+gap)));
+    endingIndex = cardsPerRow*(Math.floor((topScroll + vh) / (cardHeight+gap)))+cardsPerRow-1;
+    startingIndex = startingIndex - bufferRows*cardsPerRow;
+    endingIndex = endingIndex + bufferRows*cardsPerRow;
+    if(startingIndex<0)
+    {
+        startingIndex = 0;
+    }
+    // console.log(startingIndex,endingIndex,oldStartingIndex,oldEndingIndsex);
     if(endingIndex>pokemonList.length){
         if(isFetching)
         {
@@ -76,7 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 document.addEventListener("scroll",async (e)=>{
-    await renderViewportCards();
     topScroll = e.currentTarget.scrollingElement.scrollTop;
+    await renderViewportCards();
+    
 })
 
