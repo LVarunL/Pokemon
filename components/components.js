@@ -8,7 +8,7 @@
 //                     <a href="wishlist.html">Wishlist</a>
 //                 </nav>  
 //             </div>
-            
+
 //             <div class="filters-container">
 //                 <input type="text" id="search-bar" placeholder="Search Pokémon by name...">
 //                 <input type="number" id="min-height-filter" placeholder="Min Height">
@@ -45,7 +45,7 @@
 // import { renderedCards } from "../script/virtualisedApp";
 
 class Header extends HTMLElement {
-    
+
     connectedCallback() {
         this.innerHTML = `
             <div class="header">
@@ -72,23 +72,24 @@ class Header extends HTMLElement {
 
           `
     }
-    
 
-    
+
+
 }
 
 customElements.define('main-header', Header);
 
 class PokemonCard extends HTMLElement {
-    connectedCallback(){
+    connectedCallback() {
         const thisCard = this;
         const containerWrapper = document.querySelector(".container-wrapper");
+        const idx = thisCard.getAttribute("data-idx");
         function handleScrollForCard(e) {
             const topScroll = e.target.scrollTop;
 
-            if(thisCard.offsetTop+cardHeight+gap<=topScroll-bufferRows*(cardHeight+gap) || thisCard.offsetTop>=topScroll+containerWrapper.clientHeight+bufferRows*(cardHeight+gap)){
-                const idx = thisCard.getAttribute("data-idx");
-                console.log("removed",idx);
+            if (thisCard.offsetTop + cardHeight + gap <= topScroll - bufferRows * (cardHeight + gap) || thisCard.offsetTop >= topScroll + containerWrapper.clientHeight + bufferRows * (cardHeight + gap)) {
+                
+                // console.log("removed",idx);
                 thisCard.remove();
             }
 
@@ -108,65 +109,85 @@ class PokemonCard extends HTMLElement {
         //     // Remove only if outside buffer range
         //     thisCard.remove();
         // }
-        
-        
-        containerWrapper.addEventListener("scroll",(e)=>{
+
+        const resizeObserver = new ResizeObserver(() => {
+            // showFullLoader();
+            
+
+            if(isLoadingResize===false){
+                loadingResize();
+            }
+            
+            cardsPerRow = Math.floor(containerWrapper.clientWidth / (cardWidth + gap));
+            emptyHorizontalSpace = containerWrapper.clientWidth - cardsPerRow * cardWidth - (cardsPerRow - 1) * gap;
+            leftSpace = emptyHorizontalSpace / 2;
+            thisCard.style.left = leftSpace + (idx % cardsPerRow) * (cardWidth + gap);
+            thisCard.style.top = Math.floor(idx / cardsPerRow) * (cardHeight + gap);
+            
+        });
+
+        resizeObserver.observe(containerWrapper);
+
+        containerWrapper.addEventListener("scroll", (e) => {
             // console.log("kji");
+            console.log(containerWrapper.clientWidth);
             handleScrollForCard(e);
         });
-        
+
+
+
     }
     set data(pokemon) {
         this.innerHTML = `
             <div class="">
                 <div class="card-upper">
                     <div class="pokiimage">
-                    <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                    <img src="${pokemon?.sprites.front_default}" alt="${pokemon?.name}">
                     </div>
 
-                    <h2>${pokemon.name.toUpperCase()}</h2>
-                    <p><strong>Specie:</strong> ${pokemon.species.name}</p>
-                    <p><strong>Types:</strong> ${pokemon.types.map(t => `<span class="type-badge">${t.type.name}</span>`).join('')}</p>
+                    <h2>${pokemon?.name.toUpperCase()}</h2>
+                    <p><strong>Specie:</strong> ${pokemon?.species.name}</p>
+                    <p><strong>Types:</strong> ${pokemon?.types.map(t => `<span class="type-badge">${t.type.name}</span>`).join('')}</p>
                     <span class="wishlist-icon">&#9825</span>
-                    <button class="audio-btn" onclick="document.getElementById('audio-${pokemon.id}').play()">🔊</button>
+                    <button class="audio-btn" onclick="document.getElementById('audio-${pokemon?.id}').play()">🔊</button>
                 </div>
                 <div class="card-lower">
                     <div class="card-details">
-                        <p><strong>Height:</strong> ${pokemon.height}</p>
-                        <p><strong>Weight:</strong> ${pokemon.weight}</p>
-                        <p><strong>Base Experience:</strong> ${pokemon.base_experience}</p>
-                        <p><strong>Forms:</strong> ${pokemon.forms.map(form => form.name).join(', ')}</p>
-                        <p><strong>Abilities:</strong> ${pokemon.abilities.map(ab => ab.ability.name).join(', ')}</p>
+                        <p><strong>Height:</strong> ${pokemon?.height}</p>
+                        <p><strong>Weight:</strong> ${pokemon?.weight}</p>
+                        <p><strong>Base Experience:</strong> ${pokemon?.base_experience}</p>
+                        <p><strong>Forms:</strong> ${pokemon?.forms.map(form => form.name).join(', ')}</p>
+                        <p><strong>Abilities:</strong> ${pokemon?.abilities.map(ab => ab.ability.name).join(', ')}</p>
                     </div>
                     <div class="card-stats">
-                        ${pokemon.stats.map(stat => `<p><strong>${stat.stat.name}:</strong> ${stat.base_stat}</p>`).join('')}
+                        ${pokemon?.stats.map(stat => `<p><strong>${stat.stat.name}:</strong> ${stat.base_stat}</p>`).join('')}
                     </div>
                 </div>
-                <audio id="audio-${pokemon.id}" src="${pokemon.cries.latest}" type="audio/ogg"></audio>
+                <audio id="audio-${pokemon?.id}" src="${pokemon?.cries.latest}" type="audio/ogg"></audio>
             </div>
         `;
 
-        
 
-        
 
-    
+
+
+
         const wishlistButton = this.querySelector('.wishlist-icon');
         let wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
-        const isInWishlist = wishlistIDs.some(id => id === pokemon.id);
+        const isInWishlist = wishlistIDs.some(id => id === pokemon?.id);
         if (isInWishlist) {
-            wishlistButton.innerHTML = '&#9829;'; 
+            wishlistButton.innerHTML = '&#9829;';
             wishlistButton.classList.add('added');
         }
 
         wishlistButton.addEventListener('click', () => {
             if (isInWishlist) {
-                wishlistIDs = wishlistIDs.filter(id => id !== pokemon.id);
+                wishlistIDs = wishlistIDs.filter(id => id !== pokemon?.id);
                 // const wishlisIDs = wishlist.map(p => p.id);
                 localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
                 wishlistButton.innerHTML = '&#9825;';
                 wishlistButton.classList.remove('added');
-                alert(`${pokemon.name} removed from wishlist!`);
+                alert(`${pokemon?.name} removed from wishlist!`);
                 if (window.location.pathname.includes('wishlist.html')) {
                     location.reload(); //find alternative if possible
                 }
@@ -174,11 +195,11 @@ class PokemonCard extends HTMLElement {
                 //     location.reload();
                 // }
             } else {
-                wishlistIDs.push(pokemon.id);
+                wishlistIDs.push(pokemon?.id);
                 localStorage.setItem('wishlist', JSON.stringify(wishlistIDs));
                 wishlistButton.innerHTML = '&#9829;';
                 wishlistButton.classList.add('added');
-                alert(`${pokemon.name} added to wishlist!`);
+                alert(`${pokemon?.name} added to wishlist!`);
                 location.reload(); //find alternative
             }
         });
@@ -186,15 +207,15 @@ class PokemonCard extends HTMLElement {
         const pokiImage = this.getElementsByClassName('pokiimage');
 
         for (let i = 0; i < pokiImage.length; i++) {
-            pokiImage[i].addEventListener('mouseover', function() {
+            pokiImage[i].addEventListener('mouseover', function () {
                 // console.log("hi pokiimage");
                 // console.log(pokiImage[i]);
-                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.other.showdown.front_default?pokemon.sprites.other.showdown.front_default:pokemon.sprites.front_default}" alt="${pokemon.name}">`
+                pokiImage[i].innerHTML = `<img src="${pokemon?.sprites.other.showdown.front_default ? pokemon?.sprites.other.showdown.front_default : pokemon?.sprites.front_default}" alt="${pokemon?.name}">`
             });
 
-            pokiImage[i].addEventListener('mouseout', function() {
+            pokiImage[i].addEventListener('mouseout', function () {
 
-                pokiImage[i].innerHTML = `<img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">`
+                pokiImage[i].innerHTML = `<img src="${pokemon?.sprites.front_default}" alt="${pokemon?.name}">`
             });
         }
 

@@ -1,25 +1,28 @@
 let topScroll = 0;
-let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-let startingIndex = 16;
-let endingIndex = 16;
+let startingIndex = 20;
+let endingIndex = 20;
 let pokemonList = [];
 let nextURL = "https://pokeapi.co/api/v2/pokemon"
-let isFetching = false;
-
 
 const container = document.querySelector(".container");
 const containerWrapper = document.querySelector(".container-wrapper");
-const containerWidth = container.clientWidth;
+
+
 const cardHeight = 500;
 const cardWidth = 300;
 const gap = 30;
-const cardsPerRow = Math.floor(containerWidth/(cardWidth+gap));
-const emptyHorizontalSpace = containerWidth - cardsPerRow*cardWidth - (cardsPerRow-1)*gap;
-const leftSpace = emptyHorizontalSpace/2;
 const bufferRows = 2;
 
 
+let cardsPerRow = Math.floor(containerWrapper.clientWidth/(cardWidth+gap));
+let emptyHorizontalSpace = containerWrapper.clientWidth - cardsPerRow*cardWidth - (cardsPerRow-1)*gap;
+let leftSpace = emptyHorizontalSpace/2;
+
+
+
+let isFetching = false;
+let isLoadingResize = false;
+let isRendering = false;
 // const renderedCards = {};
 
 function createCard(idx) {
@@ -32,11 +35,11 @@ function createCard(idx) {
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
     container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+10*(cardHeight+gap);
-    console.log("added",idx);
     container.appendChild(card);
 }
 
 async function renderViewportCards(){
+    showLoading();
     const oldStartingIndex = startingIndex;
     const oldEndingIndex = endingIndex;
     startingIndex = cardsPerRow*(Math.floor(topScroll/(cardHeight+gap)));
@@ -47,7 +50,6 @@ async function renderViewportCards(){
     {
         startingIndex = 0;
     }
-    // console.log(startingIndex,endingIndex,oldStartingIndex,oldEndingIndsex);
     if(endingIndex>pokemonList.length){
         if(isFetching)
         {
@@ -63,6 +65,7 @@ async function renderViewportCards(){
     for(i=oldEndingIndex+1;i<=endingIndex;i+=1){
         createCard(i);
     }
+    stopShowLoading();
 }
 
 async function fetchPokemonFromURL(url) {
@@ -93,17 +96,38 @@ document.addEventListener("DOMContentLoaded", () => {
     renderViewportCards();
 })
 
-// container.addEventListener("scroll",async (e)=>{
-//     console.log("hio");
-//     topScroll = e.currentTarget.scrollingElement.scrollTop;
-//     console.log(topScroll);
-//     await renderViewportCards();
-    
-// })
+
 
 containerWrapper.addEventListener("scroll",async (e)=>{
     topScroll = e.target.scrollTop;
-    // console.log(topScroll);
     await renderViewportCards();
 })
 
+
+async function loadingResize(){
+    isLoadingResize = true;
+    const tempStartingIndex = Math.floor((startingIndex+bufferRows*cardsPerRow)/cardsPerRow)*(cardHeight+gap);
+    scrollTo(tempStartingIndex,0);
+    await renderViewportCards();
+    isLoadingResize = false;
+}
+
+function showLoading(){
+    if(isRendering) return;
+    const loader = document.createElement("div");
+    loader.textContent = "Loading...";
+    loader.classList.add("loader");
+    loader.style.position = "absolute";
+    loader.style.zIndex = 100;
+    loader.style.top = "50vh";
+    loader.style.left = "30vw";
+    document.body.appendChild(loader);
+    isRendering = true;
+}
+
+function stopShowLoading(){
+    console.log("loaded");
+    const loader = document.querySelector(".loader");
+    loader.remove();
+    isRendering = false;
+}
