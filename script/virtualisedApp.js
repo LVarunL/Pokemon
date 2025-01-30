@@ -9,6 +9,7 @@ let isFetching = false;
 
 
 const container = document.querySelector(".container");
+const containerWrapper = document.querySelector(".container-wrapper");
 const containerWidth = container.clientWidth;
 const cardHeight = 500;
 const cardWidth = 300;
@@ -31,6 +32,7 @@ function createCard(idx) {
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
     container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+10*(cardHeight+gap);
+    console.log("added",idx);
     container.appendChild(card);
 }
 
@@ -38,7 +40,7 @@ async function renderViewportCards(){
     const oldStartingIndex = startingIndex;
     const oldEndingIndex = endingIndex;
     startingIndex = cardsPerRow*(Math.floor(topScroll/(cardHeight+gap)));
-    endingIndex = cardsPerRow*(Math.floor((topScroll + vh) / (cardHeight+gap)))+cardsPerRow-1;
+    endingIndex = cardsPerRow*(Math.floor((topScroll + containerWrapper.clientHeight) / (cardHeight+gap)))+cardsPerRow-1;
     startingIndex = startingIndex - bufferRows*cardsPerRow;
     endingIndex = endingIndex + bufferRows*cardsPerRow;
     if(startingIndex<0)
@@ -91,9 +93,17 @@ document.addEventListener("DOMContentLoaded", () => {
     renderViewportCards();
 })
 
-document.addEventListener("scroll",async (e)=>{
-    topScroll = e.currentTarget.scrollingElement.scrollTop;
-    await renderViewportCards();
+// container.addEventListener("scroll",async (e)=>{
+//     console.log("hio");
+//     topScroll = e.currentTarget.scrollingElement.scrollTop;
+//     console.log(topScroll);
+//     await renderViewportCards();
     
+// })
+
+containerWrapper.addEventListener("scroll",async (e)=>{
+    topScroll = e.target.scrollTop;
+    // console.log(topScroll);
+    await renderViewportCards();
 })
 

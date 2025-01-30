@@ -50,10 +50,7 @@ class Header extends HTMLElement {
         this.innerHTML = `
             <div class="header">
                 <img src="images/header.svg" alt="PokeAPI logo">
-                <nav class="navbar">
-                    <a href="index.html">Home</a>
-                    <a href="wishlist.html">Wishlist</a>
-                </nav>  
+                
             </div>
             
             <div class="filters-container">
@@ -85,15 +82,13 @@ customElements.define('main-header', Header);
 class PokemonCard extends HTMLElement {
     connectedCallback(){
         const thisCard = this;
+        const containerWrapper = document.querySelector(".container-wrapper");
+        function handleScrollForCard(e) {
+            const topScroll = e.target.scrollTop;
 
-        function handleScrollForCard() {
-            console.log(window.innerHeight,"le");
-            let bounding = thisCard.getBoundingClientRect();
-            if (bounding.top >= -1*(bufferRows+1)*(cardHeight+gap) //document.documentElement.clientHeight<=bounding.top+(cardHeight+gap)*(bufferRows+1) OR bounding.bottom-(bufferRows+1)*cardHeight<=window.innerHeight
-                && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (bufferRows+1)*(cardHeight+gap)) {
-                    
-            } else {
-                
+            if(thisCard.offsetTop+cardHeight+gap<=topScroll-bufferRows*(cardHeight+gap) || thisCard.offsetTop>=topScroll+containerWrapper.clientHeight+bufferRows*(cardHeight+gap)){
+                const idx = thisCard.getAttribute("data-idx");
+                console.log("removed",idx);
                 thisCard.remove();
             }
 
@@ -115,9 +110,9 @@ class PokemonCard extends HTMLElement {
         // }
         
         
-        document.addEventListener("scroll",()=>{
+        containerWrapper.addEventListener("scroll",(e)=>{
             // console.log("kji");
-            handleScrollForCard();
+            handleScrollForCard(e);
         });
         
     }
