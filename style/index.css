@@ -306,7 +306,7 @@ p {
     position: relative;
     height:20px;
     text-align: center;
-    display: none;
+    /* display: none; */
   }
   
   #checkboxes {
