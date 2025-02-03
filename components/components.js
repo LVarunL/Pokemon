@@ -50,7 +50,10 @@ class Header extends HTMLElement {
         this.innerHTML = `
             <div class="header">
                 <img src="images/header.svg" alt="PokeAPI logo">
-                
+                <nav class="navbar">
+                     <a href="index.html">Home</a>
+                    <a href="wishlist.html">Wishlist</a>
+                </nav>  
             </div>
             
             <div class="filters-container">
@@ -200,7 +203,7 @@ class PokemonCard extends HTMLElement {
                 wishlistButton.innerHTML = '&#9829;';
                 wishlistButton.classList.add('added');
                 alert(`${pokemon?.name} added to wishlist!`);
-                location.reload(); //find alternative
+                // location.reload(); //find alternative
             }
         });
 

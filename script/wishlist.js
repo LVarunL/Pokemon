@@ -57,12 +57,12 @@ function loadWishlistIDs(){
     const wishlistIDs = JSON.parse(localStorage.getItem('wishlist')) || [];
     return wishlistIDs;
 }
-// async function loadWishlist(wishlisIDs) {
-//     const wishlistPromises = wishlistIDs.map(id => fetchPokemon(id));
-//     const wishlist = await Promise.all(wishlistPromises);
-//     console.log(wishlist);
-//     return wishlist;
-// }
+async function loadWishlist(wishlisIDs) {
+    const wishlistPromises = wishlistIDs.map(id => fetchPokemon(id));
+    const wishlist = await Promise.all(wishlistPromises);
+    console.log(wishlist);
+    return wishlist;
+}
 
 async function loadWishlistInRange(wishlistIDs) {
     const newWishlistPromises = [];
