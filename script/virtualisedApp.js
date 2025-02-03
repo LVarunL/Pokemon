@@ -10,12 +10,6 @@ const container = document.querySelector(".container");
 const containerWrapper = document.querySelector(".container-wrapper");
 
 
-const cardHeight = 500;
-const cardWidth = 300;
-const gap = 30;
-const bufferRows = 2;
-
-
 let cardsPerRow = Math.floor(containerWrapper.clientWidth/(cardWidth+gap));
 let emptyHorizontalSpace = containerWrapper.clientWidth - cardsPerRow*cardWidth - (cardsPerRow-1)*gap;
 let leftSpace = emptyHorizontalSpace/2;
@@ -25,7 +19,8 @@ let leftSpace = emptyHorizontalSpace/2;
 let isFetching = false;
 let isLoadingResize = false;
 let isRendering = false;
-// const renderedCards = {};
+
+
 
 function createCard(idx) {
     const card = document.createElement('pokemon-card');

@@ -2,18 +2,11 @@ let topScroll = 0;
 let startingIndex = 20;
 let endingIndex = 20;
 let pokemonList = [];
-// let nextURL = "https://pokeapi.co/api/v2/pokemon";
 const pokeURL = "https://pokeapi.co/api/v2/";
-// let typesDisplayed = [];
 
 const container = document.querySelector(".container");
 const containerWrapper = document.querySelector(".container-wrapper");
 
-
-const cardHeight = 500;
-const cardWidth = 300;
-const gap = 30;
-const bufferRows = 2;
 
 
 let cardsPerRow = Math.floor(containerWrapper.clientWidth/(cardWidth+gap));
@@ -21,14 +14,11 @@ let emptyHorizontalSpace = containerWrapper.clientWidth - cardsPerRow*cardWidth 
 let leftSpace = emptyHorizontalSpace/2;
 
 
-
-let isFetching = false;
 let isLoadingResize = false;
 let isRendering = false;
-// const renderedCards = {};
+
 
 function createCard(idx) {
-    console.log(idx);
     const card = document.createElement('pokemon-card');
     card.classList.add("card");
     card.style.position = "absolute";

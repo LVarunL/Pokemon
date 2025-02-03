@@ -249,6 +249,9 @@ p {
 
 
 
+.filters-container{
+    display: none;
+}
 #pagination {
     display: flex;
     justify-content: center;
