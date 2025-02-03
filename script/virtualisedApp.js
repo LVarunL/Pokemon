@@ -31,7 +31,7 @@ function createCard(idx) {
     card.dataset.idx = idx;
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
-    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+4*(cardHeight+gap);
+    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+2*(cardHeight+gap);
     container.appendChild(card);
 }
 
@@ -169,6 +169,9 @@ function populateChips(types){
         const newChip = document.createElement("div");
         newChip.classList.add("chip");
         newChip.textContent = type;
+        if(type==="All"){
+            newChip.style.backgroundColor = "cyan";
+        }
         newChip.addEventListener("click",handleChipClick);
         filterContainer.appendChild(newChip);
     })
@@ -179,6 +182,22 @@ async function handleChipClick(){
     this.classList.toggle("selectedChip");
     const isAdding = this.classList.contains("selectedChip");
     const type = this.textContent;
+    if(type==="All"){
+        //remove selected class from all
+        typesDisplayed = [];
+        container.innerHTML =  ``;
+        pokemonList = [];
+        startingIndex = 20;
+        endingIndex = 20;
+        containerWrapper.scrollTop = 0;
+        nextURL = "https://pokeapi.co/api/v2/pokemon";
+        const chips = document.querySelectorAll(".chip");
+        chips.forEach(chip=>{
+            chip.classList.remove("selectedChip");
+        });
+        await renderViewportCards();
+        return;
+    }
     if(isAdding){
         console.log("adding " + type);
         const newPokemons = await fetchPokemonsOfType(type);
@@ -305,7 +324,6 @@ async function handleCheckboxSelect(type) {
     }
 
 }
-
 
 
 

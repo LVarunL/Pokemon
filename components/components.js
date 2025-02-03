@@ -114,10 +114,7 @@ class PokemonCard extends HTMLElement {
         //     thisCard.remove();
         // }
 
-        const resizeObserver = new ResizeObserver(() => {
-            // showFullLoader();
-            
-
+        function handleResize(){
             if(isLoadingResize===false){
                 loadingResize();
             }
@@ -127,8 +124,8 @@ class PokemonCard extends HTMLElement {
             leftSpace = emptyHorizontalSpace / 2;
             thisCard.style.left = leftSpace + (idx % cardsPerRow) * (cardWidth + gap);
             thisCard.style.top = Math.floor(idx / cardsPerRow) * (cardHeight + gap);
-            
-        });
+        }
+        const resizeObserver = new ResizeObserver(handleResize);
 
         resizeObserver.observe(containerWrapper);
 
