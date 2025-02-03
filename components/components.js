@@ -44,6 +44,17 @@
 // }
 // import { renderedCards } from "../script/virtualisedApp";
 
+{/* <form>
+<div class="multiselect">
+    <div class="selectBox"">
+        Select Types
+        <div id="checkboxes">
+        
+        </div>
+    </div>
+    
+</div>
+</form> */}
 class Header extends HTMLElement {
 
     connectedCallback() {
@@ -57,17 +68,7 @@ class Header extends HTMLElement {
             </div>
             
             <div class="filters-container">
-                <form>
-                    <div class="multiselect">
-                        <div class="selectBox"">
-                            Select Types
-                            <div id="checkboxes">
-                            
-                            </div>
-                        </div>
-                        
-                    </div>
-                </form>
+
 
             </div>
 

@@ -27,7 +27,7 @@ function createCard(idx) {
     card.dataset.idx = idx;
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
-    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+10*(cardHeight+gap);
+    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+4*(cardHeight+gap);
     container.appendChild(card);
 }
 

@@ -31,7 +31,7 @@ function createCard(idx) {
     card.dataset.idx = idx;
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
-    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+10*(cardHeight+gap);
+    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+4*(cardHeight+gap);
     container.appendChild(card);
 }
 
@@ -47,8 +47,26 @@ async function renderViewportCards(){
     {
         startingIndex = 0;
     }
+    if(typesDisplayed.length>0){
+        stopShowLoading();
+        // await renderViewportCards();
+        if(startingIndex!=oldStartingIndex)
+            for(i=startingIndex;i<=oldStartingIndex;i+=1){
+                if(i>=pokemonList.length){
+                    break;
+                }
+                createCard(i);
+            }
+            for(i=oldEndingIndex+1;i<=endingIndex;i+=1){
+                if(i>=pokemonList.length){
+                    break;
+                }
+                createCard(i);
+            }
+        return;
+    }
     if(endingIndex>pokemonList.length){
-        if(isFetching || typesDisplayed.length>0) //check if this is okay
+        if(isFetching) //check if this is okay
         {
             return;
         }
@@ -127,19 +145,90 @@ async function getAllTypes() { //is pure
     return types;
 }
 
-function populateTypeDropdown(types) { // is pure
-    const typeFilter = document.getElementById('checkboxes');
-    types.forEach(type => {
-        const option = document.createElement('label');
-        const optionInput = document.createElement('input');
-        optionInput.setAttribute("type", "checkbox");
-        optionInput.setAttribute("name", "typeOption");
-        optionInput.dataset.value = type;
-        optionInput.addEventListener("click", () => handleCheckboxSelect(type));
-        option.textContent = type;
-        option.appendChild(optionInput);
-        typeFilter.appendChild(option);
-    });
+// function populateTypeDropdown(types) { // is pure
+//     const typeFilter = document.getElementById('checkboxes');
+//     types.forEach(type => {
+//         const option = document.createElement('label');
+//         const optionInput = document.createElement('input');
+//         optionInput.setAttribute("type", "checkbox");
+//         optionInput.setAttribute("name", "typeOption");
+//         optionInput.dataset.value = type;
+//         optionInput.addEventListener("click", () => handleCheckboxSelect(type));
+//         option.textContent = type;
+//         option.appendChild(optionInput);
+//         typeFilter.appendChild(option);
+//     });
+// }
+
+function populateChips(types){
+    const filterContainer = document.querySelector(".filters-container");
+    // filterContainer.textContent = "filtersssss";
+    filterContainer.style.color = "white";
+    types = ["All",...types];
+    types.forEach((type)=>{
+        const newChip = document.createElement("div");
+        newChip.classList.add("chip");
+        newChip.textContent = type;
+        newChip.addEventListener("click",handleChipClick);
+        filterContainer.appendChild(newChip);
+    })
+}
+
+async function handleChipClick(){
+    console.log(this);
+    this.classList.toggle("selectedChip");
+    const isAdding = this.classList.contains("selectedChip");
+    const type = this.textContent;
+    if(isAdding){
+        console.log("adding " + type);
+        const newPokemons = await fetchPokemonsOfType(type);
+        if (typesDisplayed.length === 0) {
+            container.innerHTML = ``;
+            pokemonList = newPokemons;
+            console.log(pokemonList);
+            startingIndex = 20;
+            endingIndex = 20;
+            containerWrapper.scrollTop = 0;
+            await renderViewportCards();
+            typesDisplayed.push(type);
+        }
+        else {
+            pokemonList.push(...newPokemons);
+            typesDisplayed.push(type);
+            containerWrapper.scrollTop = 0;
+            await renderViewportCards();
+        }
+        
+        
+    }
+    else{
+        console.log("removing " + type);
+        typesDisplayed = typesDisplayed.filter((typeDisplayed) => {
+            return typeDisplayed !== type;
+        });
+        // const container = document.querySelector(".container");
+        container.innerHTML = ``;
+        pokemonPromises = [];
+
+        typesDisplayed.forEach((typeDisplayed) => {
+            pokemonPromises.push(fetchPokemonsOfType(typeDisplayed));
+        })
+        const pokemonsToDisplay = await Promise.all(pokemonPromises);
+        // console.log(pokemonsToDisplay[0]);
+        // renderPokemonCards(pokemonsToDisplay[0]); //check why
+        pokemonList = pokemonsToDisplay[0];
+        
+        console.log(pokemonList);
+        if (typesDisplayed.length === 0) {
+            container.innerHTML = ``;
+            pokemonList = [];
+            nextURL = "https://pokeapi.co/api/v2/pokemon";
+        }
+        startingIndex = 20;
+        endingIndex = 20;
+        containerWrapper.scrollTop = 0;
+        await renderViewportCards();
+    }
 }
 //filter stuff below
 async function fetchPokemonsOfType(type) { //is pure(can be further divided)
@@ -154,22 +243,23 @@ async function fetchPokemonsOfType(type) { //is pure(can be further divided)
     return pokemonOfTypeList;
 }
 
-var expanded = false;
-function showCheckboxes() {
-    var checkboxes = document.getElementById("checkboxes");
-    if (!expanded) {
-        checkboxes.style.display = "block";
-        // console.log("lpo")
-        expanded = true;
-    } else {
-        checkboxes.style.display = "none";
-        expanded = false;
-    }
-}
+// var expanded = false;
+// function showCheckboxes() {
+//     var checkboxes = document.getElementById("checkboxes");
+//     if (!expanded) {
+//         checkboxes.style.display = "block";
+//         // console.log("lpo")
+//         expanded = true;
+//     } else {
+//         checkboxes.style.display = "none";
+//         expanded = false;
+//     }
+// }
 
 
 
 async function handleCheckboxSelect(type) {
+    return;
     if (!typesDisplayed.includes(type)) {
         console.log("adding " + type);
         const newPokemons = await fetchPokemonsOfType(type);
@@ -221,11 +311,8 @@ async function handleCheckboxSelect(type) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const types = await getAllTypes();
-    populateTypeDropdown(types);
-    const selectBox = document.querySelector(".selectBox");
-    selectBox.addEventListener("click", (e) => {
-        showCheckboxes();
-    });
+    populateChips(types);
+    
 });
 
 document.addEventListener("DOMContentLoaded", () => {

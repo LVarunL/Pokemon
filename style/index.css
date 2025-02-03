@@ -249,9 +249,7 @@ p {
 
 
 
-.filters-container{
-    display: none;
-}
+
 #pagination {
     display: flex;
     justify-content: center;
@@ -338,3 +336,24 @@ p {
     background-color: #1e90ff;
   }
   
+  .filters-container{
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+  }
+  .chip{
+    cursor: pointer;
+    border-style: solid;
+    border-radius: 20px;
+    /* background-color: #79272A; */
+    background-color: #CACACC;
+    color: black;
+    width: fit-content;
+    padding: 0.5rem;
+  }
+
+  .selectedChip{
+    background-color: #FF3F40;
+  }
