@@ -31,7 +31,7 @@ function createCard(idx) {
     card.dataset.idx = idx;
     card.data = pokemonList[idx];
     const container = document.querySelector(".container");
-    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+2*(cardHeight+gap);
+    container.style.height = Math.floor(idx/cardsPerRow)*(cardHeight+gap)+4*(cardHeight+gap);
     container.appendChild(card);
 }
 
@@ -336,9 +336,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener("DOMContentLoaded", () => {
     renderViewportCards();
 })
-
-
-
 containerWrapper.addEventListener("scroll",async (e)=>{
     topScroll = e.target.scrollTop;
     await renderViewportCards();
